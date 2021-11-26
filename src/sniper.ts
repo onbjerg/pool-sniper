@@ -18,6 +18,9 @@ export default class Sniper {
 
   // Token to watch
   tokenAddress: string;
+  // Native token info
+  nativeTokenAddress: string;
+  nativeTokenDecimals: number;
   // Factory contract
   factory: Contract;
   // Router address
@@ -44,6 +47,8 @@ export default class Sniper {
    */
   constructor(
     tokenAddress: string,
+    nativeTokenAddress: string,
+    nativeTokenDecimals: number,
     factoryAddress: string,
     routerAddress: string,
     rpcEndpoint: string,
@@ -58,6 +63,10 @@ export default class Sniper {
     this.rpc = new providers.JsonRpcProvider(rpcEndpoint);
     this.wallet = new Wallet(privateKey, this.rpc);
     this.chainId = chainId;
+
+    // Wrapped native token info
+    this.nativeTokenAddress = nativeTokenAddress;
+    this.nativeTokenDecimals = nativeTokenDecimals;
 
     // Setup token details
     this.tokenAddress = utils.getAddress(tokenAddress); // Normalize address
@@ -82,7 +91,7 @@ export default class Sniper {
     // Generate Uniswap pair
     const pair = new UniswapPair({
       // Base chain token to convert from
-      fromTokenContractAddress: "0x0d500b1d8e8ef31e21c99d1db9a6444d3adf1270",
+      fromTokenContractAddress: this.nativeTokenAddress,
       // Desired token to purchase
       toTokenContractAddress: desiredTokenAddress,
       // Ethereum address of user
@@ -106,13 +115,13 @@ export default class Sniper {
             ? "0x275617327c958bD06b5D6b871E7f491D76113dd8"
             : "0xe9939e7Ea7D7fb619Ac57f648Da7B1D425832631",
           nativeCurrency: {
-            name: "Matic Token",
-            symbol: "MATIC"
+            name: "Native",
+            symbol: "NATIVE"
           },
           nativeWrappedTokenInfo: {
             chainId: this.chainId,
-            contractAddress: "0x0d500b1d8e8ef31e21c99d1db9a6444d3adf1270",
-            decimals: 18,
+            contractAddress: this.nativeTokenAddress,
+            decimals: this.nativeTokenDecimals,
             symbol: "WNATIVE",
             name: "Wrapped Native Token"
           }
