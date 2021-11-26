@@ -18,6 +18,8 @@ export default class Sniper {
   tokenAddress: string;
   // Factory contract
   factory: Contract;
+  // Router address
+  routerAddress: string;
   // Amount of base token (ETH/Matic) to spend
   purchaseAmount: string;
   // Maximum gas price to pay for tx inclusion
@@ -41,6 +43,7 @@ export default class Sniper {
   constructor(
     tokenAddress: string,
     factoryAddress: string,
+    routerAddress: string,
     rpcEndpoint: string,
     privateKey: string,
     purchaseAmount: string,
@@ -55,6 +58,7 @@ export default class Sniper {
     // Setup token details
     this.tokenAddress = utils.getAddress(tokenAddress); // Normalize address
     this.factory = new Contract(factoryAddress, ABI_UniswapV2Factory, this.rpc);
+    this.routerAddress = routerAddress;
     this.purchaseAmount = purchaseAmount;
     this.gasPrice = utils.parseUnits(gasPrice, "gwei");
     this.slippage = slippage;
@@ -87,7 +91,7 @@ export default class Sniper {
         uniswapVersions: [UniswapVersion.v2], // Only V2
         cloneUniswapContractDetails: {
           v2Override: {
-            routerAddress: "0x1b02da8cb0d097eb8d57a175b88c7d8b47997506",
+            routerAddress: this.routerAddress,
             factoryAddress: this.factory.address,
             pairAddress: pair
           }
