@@ -15,6 +15,8 @@ dotenv.config();
   const factoryAddress: string | undefined = process.env.FACTORY_ADDRESS;
   // Router address
   const routerAddress: string | undefined = process.env.ROUTER_ADDRESS;
+  // Multicall address
+  const multicallAddress: string | undefined = process.env.MULTICALL_ADDRESS;
 
   // RPC endpoint
   const rpcEndpoint: string =
@@ -33,7 +35,7 @@ dotenv.config();
   const testnet: boolean = Boolean(process.env.TESTNET) ?? false;
 
   // Throw if missing necessary params
-  if (!tokenAddress || !privateKey || !factoryAddress || !routerAddress || !chainId || !nativeTokenAddress || !nativeTokenDecimals) {
+  if (!tokenAddress || !privateKey || !factoryAddress || !routerAddress || !chainId || !nativeTokenAddress || !nativeTokenDecimals || !multicallAddress) {
     throw new Error("Missing necessary parameters");
   }
 
@@ -44,6 +46,7 @@ dotenv.config();
     nativeTokenDecimals,
     factoryAddress,
     routerAddress,
+    multicallAddress,
     rpcEndpoint,
     privateKey,
     chainId,

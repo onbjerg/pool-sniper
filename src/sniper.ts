@@ -25,6 +25,8 @@ export default class Sniper {
   factory: Contract;
   // Router address
   routerAddress: string;
+  // Multicall address
+  multicallAddress: string;
   // Amount of base token (ETH/Matic) to spend
   purchaseAmount: string;
   // Maximum gas price to pay for tx inclusion
@@ -51,6 +53,7 @@ export default class Sniper {
     nativeTokenDecimals: number,
     factoryAddress: string,
     routerAddress: string,
+    multicallAddress: string,
     rpcEndpoint: string,
     privateKey: string,
     chainId: number,
@@ -72,6 +75,7 @@ export default class Sniper {
     this.tokenAddress = utils.getAddress(tokenAddress); // Normalize address
     this.factory = new Contract(factoryAddress, ABI_UniswapV2Factory, this.rpc);
     this.routerAddress = routerAddress;
+    this.multicallAddress = multicallAddress;
     this.purchaseAmount = purchaseAmount;
     this.gasPrice = utils.parseUnits(gasPrice, "gwei");
     this.slippage = slippage;
@@ -111,9 +115,7 @@ export default class Sniper {
         },
         customNetwork: {
           nameNetwork: "some-network",
-          multicallContractAddress: !this.testnet
-            ? "0x275617327c958bD06b5D6b871E7f491D76113dd8"
-            : "0xe9939e7Ea7D7fb619Ac57f648Da7B1D425832631",
+          multicallContractAddress: this.multicallAddress,
           nativeCurrency: {
             name: "Native",
             symbol: "NATIVE"
