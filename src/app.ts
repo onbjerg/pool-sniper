@@ -17,6 +17,8 @@ dotenv.config();
     process.env.RPC_ENDPOINT ?? "http://localhost:8545";
   // Wallet private key
   const privateKey: string | undefined = process.env.PRIVATE_KEY;
+  // Chain ID
+  const chainId: number | undefined = process.env.CHAIN_ID;
   // Purchase amount in chain base token
   const purchaseAmount: string = process.env.AMOUNT ?? "0.01"; // 0.01 eth/matic/etc.
   // Gas price to send
@@ -27,7 +29,7 @@ dotenv.config();
   const testnet: boolean = Boolean(process.env.TESTNET) ?? false;
 
   // Throw if missing necessary params
-  if (!tokenAddress || !privateKey || !factoryAddress || !routerAddress) {
+  if (!tokenAddress || !privateKey || !factoryAddress || !routerAddress || !chainId) {
     throw new Error("Missing necessary parameters");
   }
 
@@ -38,6 +40,7 @@ dotenv.config();
     routerAddress,
     rpcEndpoint,
     privateKey,
+    chainId,
     purchaseAmount,
     gasPrice,
     slippage,

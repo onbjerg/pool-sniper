@@ -13,6 +13,8 @@ export default class Sniper {
   rpc: providers.JsonRpcProvider;
   // Sniping wallet
   wallet: Wallet;
+  // Chain ID
+  chainId: number;
 
   // Token to watch
   tokenAddress: string;
@@ -46,6 +48,7 @@ export default class Sniper {
     routerAddress: string,
     rpcEndpoint: string,
     privateKey: string,
+    chainId: number,
     purchaseAmount: string,
     gasPrice: string,
     slippage: number,
@@ -54,6 +57,7 @@ export default class Sniper {
     // Setup networking + wallet
     this.rpc = new providers.JsonRpcProvider(rpcEndpoint);
     this.wallet = new Wallet(privateKey, this.rpc);
+    this.chainId = chainId;
 
     // Setup token details
     this.tokenAddress = utils.getAddress(tokenAddress); // Normalize address
@@ -97,7 +101,7 @@ export default class Sniper {
           }
         },
         customNetwork: {
-          nameNetwork: !this.testnet ? "polygon" : "mumbai",
+          nameNetwork: "some-network",
           multicallContractAddress: !this.testnet
             ? "0x275617327c958bD06b5D6b871E7f491D76113dd8"
             : "0xe9939e7Ea7D7fb619Ac57f648Da7B1D425832631",
@@ -106,11 +110,11 @@ export default class Sniper {
             symbol: "MATIC"
           },
           nativeWrappedTokenInfo: {
-            chainId: !this.testnet ? 137 : 80001,
+            chainId: this.chainId,
             contractAddress: "0x0d500b1d8e8ef31e21c99d1db9a6444d3adf1270",
             decimals: 18,
-            symbol: "WMATIC",
-            name: "Wrapped Matic"
+            symbol: "WNATIVE",
+            name: "Wrapped Native Token"
           }
         }
       })
