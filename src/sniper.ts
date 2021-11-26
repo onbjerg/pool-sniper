@@ -66,7 +66,7 @@ export default class Sniper {
    * @param {string} token0 address of token0 in pair
    * @param {string} token1 address of token1 in pair
    */
-  async submitPurchaseTx(token0: string, token1: string): Promise<void> {
+  async submitPurchaseTx(token0: string, token1: string, pair: string): Promise<void> {
     // Setup token address
     const desiredIsFirst: boolean = token0 === this.tokenAddress;
     const desiredTokenAddress: string = desiredIsFirst ? token0 : token1;
@@ -88,8 +88,8 @@ export default class Sniper {
         cloneUniswapContractDetails: {
           v2Override: {
             routerAddress: "0x1b02da8cb0d097eb8d57a175b88c7d8b47997506",
-            factoryAddress: "0xc35dadb65012ec5796536bd9864ed8773abc74c4",
-            pairAddress: "0xc35dadb65012ec5796536bd9864ed8773abc74c4"
+            factoryAddress: this.factory.address,
+            pairAddress: pair
           }
         },
         customNetwork: {
@@ -136,7 +136,7 @@ export default class Sniper {
     logger.info("Beginning to monitor UniswapV2Factory");
 
     // Listen for pair creation
-    this.factory.on("PairCreated", async (token0: string, token1: string) => {
+    this.factory.on("PairCreated", async (token0: string, token1: string, pair: string) => {
       // Log new created pairs
       logger.info(`New pair: ${token0}, ${token1}`);
 
@@ -144,7 +144,7 @@ export default class Sniper {
       if ([token0, token1].includes(this.tokenAddress)) {
         // Submit purchase transaction
         logger.info("Desired token found in pair.");
-        await this.submitPurchaseTx(token0, token1);
+        await this.submitPurchaseTx(token0, token1, pair);
 
         // Exit process after submitting tx (no PGA)
         process.exit(0);
